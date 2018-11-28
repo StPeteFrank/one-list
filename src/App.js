@@ -41,8 +41,22 @@ class App extends Component {
       .post(
         'https://one-list-api.herokuapp.com/items/?access_token=franksFirst',
         {
+          text: this.state.newItemText
+        }
+      )
+      .then(response => {
+        this.loadAllTheTodosFromTheAPI()
+      })
+  }
+  scratchOff = event => {
+    axios
+      .put(
+        `https://one-list-api.herokuapp.com/items/${
+          event.target.dataset.idtodo
+        }?access_token=franksFirst`,
+        {
           item: {
-            text: this.state.newItemText
+            complete: true
           }
         }
       )
@@ -50,19 +64,37 @@ class App extends Component {
         this.loadAllTheTodosFromTheAPI()
       })
   }
+  delete = event => {
+    axios
+      .delete(
+        `https://one-list-api.herokuapp.com/items/${
+          event.target.dataset.idtodo
+        }?access_token=franksFirst`
+      )
+      .then(response => {
+        this.loadAllTheTodosFromTheAPI()
+      })
 
+    console.log('double')
+  }
   render() {
     return (
       <div className="App">
         <header>
-          <h1>One List</h1>
+          <h1>Plaxco's To Do List</h1>
         </header>
         <main>
           <ul className="one-list">
             {this.state.todos.map((todo, index) => {
               const todoClass = todo.complete ? 'completed' : ''
               return (
-                <li key={index} className={todoClass}>
+                <li
+                  onDoubleClick={this.delete}
+                  data-idtodo={todo.id}
+                  onClick={this.scratchOff}
+                  key={index}
+                  className={todoClass}
+                >
                   {todo.text}
                 </li>
               )
@@ -81,7 +113,7 @@ class App extends Component {
           <p>
             <img src={logo} height="42" alt="logo" />
           </p>
-          <p>&copy; As If You'd Want To, Copyright </p>
+          <p>&copy; Why wouldn't you want to Copyright </p>
         </footer>
       </div>
     )
@@ -91,13 +123,11 @@ class App extends Component {
 export default App
 
 //DONE. add new item list.
-// -create list on postman.
-// -make them true.
-//Get it to display.
-//complete task or line through it
-//delete item after done with it. should disappear
+//DONE. Get it to display.
+//DONE. -create list on postman.
+//DONE. -make them true. Which puts line through by means of Postman.
+//DONE. complete task or line through it in react.
+//DONE. delete item after done with it. should disappear using react.
 
-//Wrap input in a form
-//Submit targets the form submitted
-
-//1076, 1078, 1079. 1095
+//DONE. Wrap input in a form
+//DONE. Submit targets the form submitted
